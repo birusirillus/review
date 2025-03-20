@@ -18,7 +18,7 @@
 
     <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img class="mx-auto h-12 w-auto" src="{{ asset('images/logo.png') }}" alt="Your Company">
+          <img class="mx-auto h-20 max-w-[200px]" src="{{ asset('images/P.png') }}" alt="Your Company">
           <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Register to your account</h2>
         </div>
 
@@ -37,9 +37,8 @@
               <div class="mt-2">
                 <select name="usia" id="usia" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline  -outline-offset-1 outline-gray-300 placeholder:text-gray-400  focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" required>
                   <option value="">Pilih Usia Anda</option>
-                  <option value="anak">6-12</option>
-                  <option value="remaja">13-18</option>
-                  <option value="dewasa">19-60</option>
+                  <option value="anak">6-18</option>
+                  <option value="dewasa">18+</option>
                 </select>
               </div>
             </div>

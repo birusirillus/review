@@ -2,15 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Film;
+use App\Models\User;
 use App\Models\Genre;
-use App\Models\Negara;
 use App\Models\Tahun;
+use App\Models\Negara;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 class FilmController extends Controller
 {
+    public function filterByGenre($genre)
+{
+    $films = Film::whereHas('genreRelasi', function ($query) use ($genre) {
+        $query->where('nama_genre', $genre);
+    })->get();
+
+    $genres = Genre::orderBy('nama_genre', 'asc')->get();
+
+    return view('index', compact('films', 'genres'));
+}
+
+public function tambahDataUsers() {
+    $users = User::all(); // Mengambil semua data user
+    return view('index', compact('users')); // Kirim data ke view
+}
+
+
+    public function index() {
+        $films = Film::with(['genreRelasi', 'tahunRelasi', 'negaraRelasi'])->get();
+        $genres = Genre::orderBy('nama_genre', 'asc')->get();
+        $years = Tahun::orderBy('tahun_rilis', 'desc')->get();
+        $countries = Negara::orderBy('nama_negara', 'asc')->get();
+
+        return view('index', compact('films', 'genres', 'years', 'countries'));
+    }
+
+    public function datalist()
+    {
+        $totalGenres = Film::distinct('genre')->count('genre');
+        $totalYears = Film::distinct('tahun')->count('tahun');
+        $totalFilms = Film::count();
+
+        return view('admin.adminData', compact('totalGenres', 'totalYears', 'totalFilms'));
+    }
     public function data_film(){
         $film = Film::all();
         return view('admin.film.data_film', compact('film'));
@@ -22,8 +58,9 @@ class FilmController extends Controller
         $negara = Negara::all();
         return view('admin.film.tambah_film', compact('genre','tahun', 'negara'));
     }
-    function tambahFilmProses(Request $request){
+    public function tambahFilmProses(Request $request){
         $nama = $request->input('name');
+        $aktor = $request->input('aktor');
         $deskripsi = $request->input('deskripsi');
         $durasi = $request->input('durasi');
         $genre = (int)$request->input('genre');
@@ -37,7 +74,7 @@ class FilmController extends Controller
         if ($file_gambar) {
          $thumb1 = $file_gambar->getClientOriginalName();
          $path1 = public_path(). '/gambar_film';
-         
+
          if(!File::exists($path1)){
              File::makeDirectory($path1, 0777, true, true);
          }
@@ -49,7 +86,7 @@ class FilmController extends Controller
         if ($file_trailer) {
             $thumb2 = $file_trailer->getClientOriginalName();
             $path = public_path(). '/vidio_trailer';
-            
+
             if(!File::exists($path)){
                 File::makeDirectory($path, 0777, true, true);
             }
@@ -60,6 +97,7 @@ class FilmController extends Controller
 
         $film = new Film;
         $film->nama_film = $nama;
+        $film->aktor_film = $aktor;
         $film->deskripsi = $deskripsi;
         $film->durasi = $durasi;
         $film->genre = $genre;
@@ -87,9 +125,10 @@ class FilmController extends Controller
         $negara = Negara::all();
         return view('admin.film.edit_film', compact('film', 'genre','tahun', 'negara'));
     }
-    function editFilmProses(Request $request){
-        $id = $request->input('id_film');
+
+    public function editFilmProses(Request $request){
         $nama = $request->input('name');
+        $aktor = $request->input('aktor');
         $deskripsi = $request->input('deskripsi');
         $durasi = $request->input('durasi');
         $genre = (int)$request->input('genre');
@@ -100,49 +139,50 @@ class FilmController extends Controller
         $file_gambar = $request->file('gambar');
         $file_trailer = $request->file('trailer');
 
-        $query = Film::where('id_film', $id)->first();
-        if (!$query) {
-            return redirect('/data_film')->with('error', 'Data tidak ditemukan');
+        if ($file_gambar) {
+         $thumb1 = $file_gambar->getClientOriginalName();
+         $path1 = public_path(). '/gambar_film';
+
+         if(!File::exists($path1)){
+             File::makeDirectory($path1, 0777, true, true);
+         }
+         $file_gambar->move($path1, $thumb1);
+        } else {
+            $thumb1 = null;
         }
 
-        $path1 = public_path(). '/gambar_film';
-        $path2 = public_path(). '/vidio_trailer';
-
-        if($file_gambar) {
-            $thumb1 = $file_gambar->getClientOriginalName();
-            if($query->gambar_film) {
-                File::delete($path1 . '/' . $query->gambar_film);
-            }
-            $file_gambar->move($path1, $thumb1);
-            $query->gambar_film = $thumb1;
-        }
-
-        $path2 = public_path(). '/vidio_trailer';
-         if($file_trailer) {
+        if ($file_trailer) {
             $thumb2 = $file_trailer->getClientOriginalName();
-            if($query->trailer) {
-                File::delete($path2 . '/' . $query->trailer);
+            $path = public_path(). '/vidio_trailer';
+
+            if(!File::exists($path)){
+                File::makeDirectory($path, 0777, true, true);
             }
-            $file_trailer->move($path2, $thumb2);
-            $query->trailer = $thumb2;
+            $file_trailer->move($path, $thumb2);
+        } else {
+            $thumb2 = null;
         }
 
-        $query->nama_film = $nama;
-        $query->deskripsi = $deskripsi;
-        $query->durasi = $durasi;
-        $query->genre = $genre;
-        $query->tahun = $tahun;
-        $query->negara = $negara;
-        $query->for_usia = $usia;
-        $query->rating = $rating;
-        $query->save();
+        $film = new Film;
+        $film->nama_film = $nama;
+        $film->aktor_film = $aktor;
+        $film->deskripsi = $deskripsi;
+        $film->durasi = $durasi;
+        $film->genre = $genre;
+        $film->tahun = $tahun;
+        $film->negara = $negara;
+        $film->for_usia = $usia;
+        $film->rating = $rating;
+        $film->gambar_film = $thumb1;
+        $film->trailer = $thumb2;
+        $film->save();
 
-        $query->genreRelasi()->sync($request->input('genre'));
+        $film->genreRelasi()->attach($request->input('genre'));
 
-        if($query){
-            return redirect('/data_film')->with('success','Data berhasil diubah');
+        if($film){
+            return redirect('/data_film')->with('succes','Film berhasil ditambahkan');
         } else{
-            return redirect('/data_film')->with('error', 'Data gagal diubah');
+            return redirect('/data_film')->with('error', 'Data gagal ditambahkan');
         }
     }
 
@@ -183,7 +223,7 @@ class FilmController extends Controller
     public function tambahGenre(){
         return view('admin.genre.tambah_genre');
     }
-    function tambahGenreProses(Request $request){
+    public function tambahGenreProses(Request $request){
         $id = $request->input('id_genre');
         $nama = $request->input('genre');
 
@@ -202,7 +242,7 @@ class FilmController extends Controller
         } else{
             return redirect('/data_genre')->with('error', 'Data gagal ditambahkan');
         }
-    }  
+    }
     public function deleteGenre(Request $request){
         $id_genre = $request->input('id_genre');
         $query = Genre::where('id_genre', $id_genre)->first();
@@ -286,7 +326,7 @@ class FilmController extends Controller
             return redirect('/data_negara')->with('error', 'Data gagal ditambahkan');
         }
     }
-    
+
     public function deleteNegara(Request $request){
         $id_negara = $request->input('id_negara');
         $query = Negara::where('id_negara', $id_negara)->first();
@@ -307,3 +347,4 @@ class FilmController extends Controller
         return view('admin.film.data_film', compact('film'));
     }
 }
+

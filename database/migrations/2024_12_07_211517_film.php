@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('film', function (Blueprint $table) {
             $table->increments('id_film');
             $table->string('nama_film')->nullable();
+            $table->string('aktor_film')->nullable();
             $table->text('trailer')->nullable();
             $table->text('gambar_film')->nullable();
             $table->text('deskripsi')->nullable();

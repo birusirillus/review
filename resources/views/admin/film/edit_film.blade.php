@@ -22,7 +22,7 @@
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Edit Film {{ $film->nama_film }}</h2>
         </div>
-      
+
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form class="space-y-6" action="{{ url('edit/film/proses') }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -31,6 +31,13 @@
               <label for="name" class="block text-sm/6 font-medium text-gray-900">Nama Film</label>
               <div class="mt-2">
                 <input type="text" name="name" id="name" autocomplete="name" value="{{ $film->nama_film }}" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" >
+              </div>
+            </div>
+
+            <div>
+              <label for="aktor" class="block text-sm/6 font-medium text-gray-900">Aktor Film</label>
+              <div class="mt-2">
+                <input type="text" name="aktor" id="aktor" autocomplete="aktor" value="{{ $film->aktor_film }}" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" >
               </div>
             </div>
 
@@ -105,73 +112,30 @@
                 </select>
               </div>
             </div>
-
-            <div>
-              <div class="flex items-center justify-between">
-                <label for="rating" class="block text-sm/6 font-medium text-gray-900">Rating Film</label>
-              </div>
-              <div class="mt-2">
-                    <select name="rating" id="rating" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" required>
-                      {{ $film->rating == '1' ? 'selected' : '' }}
-                      <option value="">pilih rating bintang</option>
-                      <option value="1"{{ $film->rating == '1' ? 'selected' : '' }}>1</option>
-                      <option value="1.1"{{ $film->rating == '1.1' ? 'selected' : '' }}>1.1</option>
-                      <option value="1.2"{{ $film->rating == '1.2' ? 'selected' : '' }}>1.2</option>
-                      <option value="1.3"{{ $film->rating == '1.3' ? 'selected' : '' }}>1.3</option>
-                      <option value="1.4"{{ $film->rating == '1.4' ? 'selected' : '' }}>1.4</option>
-                      <option value="1.5"{{ $film->rating == '1.5' ? 'selected' : '' }}>1.5</option>
-                      <option value="1.6"{{ $film->rating == '1.6' ? 'selected' : '' }}>1.6</option>
-                      <option value="1.7"{{ $film->rating == '1.7' ? 'selected' : '' }}>1.7</option>
-                      <option value="1.8"{{ $film->rating == '1.8' ? 'selected' : '' }}>1.8</option>
-                      <option value="1.9"{{ $film->rating == '1.9' ? 'selected' : '' }}>1.9</option>
-                      <option value="2"{{ $film->rating == '2' ? 'selected' : '' }}>2</option>
-                      <option value="2.1"{{ $film->rating == '2.1' ? 'selected' : '' }}>2.1</option>
-                      <option value="2.2"{{ $film->rating == '2.2' ? 'selected' : '' }}>2.2</option>
-                      <option value="2.3"{{ $film->rating == '2.3' ? 'selected' : '' }}>2.3</option>
-                      <option value="2.4"{{ $film->rating == '2.4' ? 'selected' : '' }}>2.4</option>
-                      <option value="2.5"{{ $film->rating == '2.5' ? 'selected' : '' }}>2.5</option>
-                      <option value="2.6"{{ $film->rating == '2.6' ? 'selected' : '' }}>2.6</option>
-                      <option value="2.7"{{ $film->rating == '2.7' ? 'selected' : '' }}>2.7</option>
-                      <option value="2.8"{{ $film->rating == '2.8' ? 'selected' : '' }}>2.8</option>
-                      <option value="2.9"{{ $film->rating == '2.9' ? 'selected' : '' }}>2.9</option>
-                      <option value="3"{{ $film->rating == '3' ? 'selected' : '' }}>3</option>
-                      <option value="3.1"{{ $film->rating == '3.1' ? 'selected' : '' }}>3.1</option>
-                      <option value="3.2"{{ $film->rating == '3.2' ? 'selected' : '' }}>3.2</option>
-                      <option value="3.3"{{ $film->rating == '3.3' ? 'selected' : '' }}>3.3</option>
-                      <option value="3.4"{{ $film->rating == '3.4' ? 'selected' : '' }}>3.4</option>
-                      <option value="3.5"{{ $film->rating == '3.5' ? 'selected' : '' }}>3.5</option>
-                      <option value="3.6"{{ $film->rating == '3.6' ? 'selected' : '' }}>3.6</option>
-                      <option value="3.7"{{ $film->rating == '3.7' ? 'selected' : '' }}>3.7</option>
-                      <option value="3.8"{{ $film->rating == '3.8' ? 'selected' : '' }}>3.8</option>
-                      <option value="3.9"{{ $film->rating == '3.9' ? 'selected' : '' }}>3.9</option>
-                      <option value="4"{{ $film->rating == '4' ? 'selected' : '' }}>4</option>
-                      <option value="4.1"{{ $film->rating == '4.1' ? 'selected' : '' }}>4.1</option>
-                      <option value="4.2"{{ $film->rating == '4.2' ? 'selected' : '' }}>4.2</option>
-                      <option value="4.3"{{ $film->rating == '4.3' ? 'selected' : '' }}>4.3</option>
-                      <option value="4.4"{{ $film->rating == '4.4' ? 'selected' : '' }}>4.4</option>
-                      <option value="4.5"{{ $film->rating == '4.5' ? 'selected' : '' }}>4.5</option>
-                      <option value="4.6"{{ $film->rating == '4.6' ? 'selected' : '' }}>4.6</option>
-                      <option value="4.7"{{ $film->rating == '4.7' ? 'selected' : '' }}>4.7</option>
-                      <option value="4.8"{{ $film->rating == '4.8' ? 'selected' : '' }}>4.8</option>
-                      <option value="4.9"{{ $film->rating == '4.9' ? 'selected' : '' }}>4.9</option>.
-                      <option value="5"{{ $film->rating == '5' ? 'selected' : '' }}>5</option>
-                    </select>
+            {{-- <div class="mb-4">
+                <label for="gambar" class="block text-sm/6 font-medium text-gray-900">Gambar Film</label>
+                <div class="mt-2">
+                    <input type="file" name="gambar" id="gambar" autocomplete="gambar" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline  -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" required>
                 </div>
-            </div>
-      
+            </div> --}}
             <div>
-              <label for="gambar" class="block text-sm/6 font-medium text-gray-900">Gambar Film</label>
-              <div class="mt-2">
-                <input type="file" name="gambar" id="gambar" autocomplete="gambar" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
-              </div>
+                <label for="gambar" class="block text-sm">Gambar:</label>
+                <input type="file" name="gambar" id="gambar" class="w-full border rounded-md">
+                @if($film->gambar_film)
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-500">Gambar saat ini:</p>
+                        <img src="{{ asset('images/' . $film->gambar_film) }}" alt="Gambar Film" class="w-5 h-5 object-cover rounded-md">
+                    </div>
+                @endif
             </div>
 
-            <div>
-              <label for="gambar" class="block text-sm/6 font-medium text-gray-900">Trailer Film</label>
-              <div class="mt-2">
-                <input type="file" name="trailer" id="trailer" autocomplete="trailer" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+            <div class="mb-4">
+                <label for="gambar" class="block text-sm/6 font-medium text-gray-900">Trailer Film</label>
+                <div class="mt-2">
+                  <input type="text" id="trailerLink" placeholder="Masukkan link trailer film" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                  <iframe id="trailerPreview" width="200" height="150" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="display: none;"></iframe>
+               </div>
               </div>
-            </div>
 
             <div>
               <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Simpan</button>
@@ -181,4 +145,37 @@
       </div>
   @endsection
 </body>
+
+<script>
+    document.getElementById('gambarLink').addEventListener('input', function() {
+        var gambarPreview = document.getElementById('gambarPreview');
+        var link = this.value.trim();
+
+        // Ekstensi yang diperbolehkan
+        var validExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
+
+        if (link.match(validExtensions)) {
+            gambarPreview.src = link;
+            gambarPreview.style.display = 'block';
+        } else {
+            gambarPreview.style.display = 'none';
+        }
+    });
+
+    document.getElementById('trailerLink').addEventListener('input', function() {
+        var trailerPreview = document.getElementById('trailerPreview');
+        var youtubeLink = this.value.trim();
+
+        // Ubah URL menjadi format embed jika dari YouTube
+        if (youtubeLink.includes('youtube.com/watch?v=')) {
+            youtubeLink = youtubeLink.replace('watch?v=', 'embed/');
+        } else if (youtubeLink.includes('youtu.be/')) {
+            youtubeLink = youtubeLink.replace('youtu.be/', 'youtube.com/embed/');
+        }
+
+        trailerPreview.src = youtubeLink;
+        trailerPreview.style.display = youtubeLink ? 'block' : 'none';
+    });
+</script>
+
 </html>

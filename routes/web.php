@@ -18,7 +18,11 @@ Route::get('/filter/negara/{id}', [HomeController::class, 'filterNegara']);
 Route::get('/search', [HomeController::class, 'search']);
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/film/review/{id}', [HomeController::class, 'filmReview']);
-
+Route::get('/admin/adminData', [FilmController::class, 'datalist'])->name('adminData');
+Route::get('/search', [FilmController::class, 'search'])->name('search');
+Route::get('/genre/{genre}', [FilmController::class, 'filterByGenre'])->name('genre.filter');
+Route::get('/custom_user/{id_user}', [FilmController::class, 'tambahDataUsers']);
+Route::get('/', [FilmController::class, 'index'])->name('home');
 
 
 Route::middleware('guest')->group(function () {

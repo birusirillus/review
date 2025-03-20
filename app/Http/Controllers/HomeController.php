@@ -70,16 +70,15 @@ class HomeController extends Controller
                             ->where('id_film', $id)
                             ->orderBy('created_at', 'desc')
                             ->get();
-                            
+
         if (FacadesAuth::check()) {
             if ($user && $films) {
                 // Definisikan urutan tingkat usia
                 $usiaTingkat = [
                     'anak' => 1,
-                    'remaja' => 2,
-                    'dewasa' => 3
+                    'dewasa' => 2
                 ];
-                
+
                 // Cek apakah kategori usia user dan film valid
                 if (isset($usiaTingkat[$user->usia]) && isset($usiaTingkat[$films->for_usia])) {
                     // Bandingkan tingkat usia
@@ -87,13 +86,13 @@ class HomeController extends Controller
                         return redirect('/')->with('error', 'Anda tidak memenuhi syarat usia untuk menonton film ini.');
                     }
                 }
-                
+
                 return view('film_review',compact('genre','tahun', 'films', 'negara', 'komentar', 'user'));
             }
         } else {
             return view('film_review', compact('genre', 'tahun', 'films', 'komentar', 'user', 'negara'));
         }
-       
+
     }
 
     public function search(Request $request)
@@ -102,13 +101,13 @@ class HomeController extends Controller
         $tahun = Tahun::all();
         $negara = Negara::all();
         $user = FacadesAuth::user();
-        
+
         $search = $request->search;
-        
+
         $films = Film::with(['genreRelasi', 'tahunRelasi', 'negaraRelasi'])
                      ->where('nama_film', 'LIKE', "%{$search}%")
                      ->get();
-                 
+
         return view('index', compact('genre', 'tahun', 'films', 'negara', 'user'));
     }
 
@@ -122,7 +121,7 @@ class HomeController extends Controller
        $existingComment = Komentar::where('id_film', $request->id_film)
        ->where('id_user', FacadesAuth::user()->id_user)
        ->first();
-        
+
        if($existingComment) {
        return redirect('/film/review/'.$request->id_film.'#komentar')
        ->with('error', 'Anda sudah memberikan komentar untuk film ini');
@@ -142,7 +141,7 @@ class HomeController extends Controller
     public function editKomentar(Request $request, $id_komentar, $id_film)
     {
         $komentar = Komentar::find($id_komentar);
-        
+
         if ($komentar && $komentar->id_user == FacadesAuth::user()->id_user) {
             $komentar->komentar = $request->komentar;
             $komentar->save();
@@ -154,7 +153,7 @@ class HomeController extends Controller
     public function deleteKomentar(Request $request, $id_komentar, $id_film)
     {
         $komentar = Komentar::find($id_komentar);
-        
+
         if ($komentar && $komentar->id_user == FacadesAuth::user()->id_user) {
             $komentar->delete();
         }
@@ -166,7 +165,7 @@ class HomeController extends Controller
         $film = Film::all();
         return view('admin.komentar.komentar_film', compact('film'));
     }
-    
+
     public function KomentarFilm($id){
         $film = Film::where('id_film', $id)->first();
         $komentar = Komentar::with('user')
@@ -180,7 +179,7 @@ class HomeController extends Controller
     public function hapusKomentar(Request $request, $id_komentar, $id_film)
     {
         $komentar = Komentar::find($id_komentar);
-        
+
         $komentar->delete();
 
         return redirect('komentar_film/'. $id_film.'#komentar-')->with('success', 'Komentar berhasil ditambahkan');
